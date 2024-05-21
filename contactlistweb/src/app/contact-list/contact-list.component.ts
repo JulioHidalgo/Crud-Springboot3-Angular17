@@ -18,6 +18,10 @@ export default class ContactListComponent implements OnInit{
   contacts: Contact[]  = [];
 
   ngOnInit(): void {
+    this.loadAll();
+  }
+
+  loadAll(){
     this.contactService.list()
     .subscribe(contacts => {
       this.contacts = contacts;
@@ -28,7 +32,7 @@ export default class ContactListComponent implements OnInit{
   deleteContact(contact: Contact) {
     this.contactService.delete(contact.id)
         .subscribe(() => {
-          console.log('Contact deleted');
+          this.loadAll();
     })
   }
 }
