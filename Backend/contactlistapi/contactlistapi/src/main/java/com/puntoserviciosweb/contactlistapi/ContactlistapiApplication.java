@@ -2,6 +2,7 @@ package com.puntoserviciosweb.contactlistapi;
 
 import com.puntoserviciosweb.contactlistapi.entity.Contact;
 import com.puntoserviciosweb.contactlistapi.repository.ContactRepository;
+import org.modelmapper.ModelMapper;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -31,5 +32,9 @@ public class ContactlistapiApplication {
 				);
 				contactRepository.saveAll(contacts);
 		};
+	}
+	@Bean
+	ModelMapper modelMapper(){
+		return new ModelMapper();
 	}
 }

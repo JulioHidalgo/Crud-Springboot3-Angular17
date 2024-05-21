@@ -1,9 +1,12 @@
 package com.puntoserviciosweb.contactlistapi.service;
 
 
+import com.puntoserviciosweb.contactlistapi.dto.ContactDTO;
 import com.puntoserviciosweb.contactlistapi.entity.Contact;
+import com.puntoserviciosweb.contactlistapi.exception.ResourceNotFoundException;
 import com.puntoserviciosweb.contactlistapi.repository.ContactRepository;
 import lombok.AllArgsConstructor;
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -17,6 +20,7 @@ import java.time.LocalDateTime;
 public class ContactService {
 
     private final ContactRepository contactRepository;
+    private final ModelMapper mapper;
 
     public Iterable <Contact> findAll() {
         return contactRepository.findAll();
@@ -25,19 +29,20 @@ public class ContactService {
     public Contact findById(Integer id){
         return contactRepository
                 .findById(id)
-                .orElse(null);
+                .orElseThrow(ResourceNotFoundException::new);
     }
 
-    public Contact create(Contact contact){
+    public Contact create(ContactDTO contactDTO){
+        Contact contact = mapper.map(contactDTO,Contact.class);
         contact.setCreatedAt(LocalDateTime.now());
         return contactRepository.save(contact);
     }
 
-    public Contact update(Integer id,Contact form){
+    public Contact update(Integer id,ContactDTO contactDTO){
         Contact contactFromDB = findById(id);
 
-        contactFromDB.setName(form.getName());
-        contactFromDB.setEmail(form.getEmail());
+        mapper.map(contactDTO,contactFromDB);
+
 
         return contactRepository.save(contactFromDB);
     }
